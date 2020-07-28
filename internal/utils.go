@@ -2,6 +2,8 @@ package internal
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -81,4 +83,18 @@ func split(s string, sep []rune) ([]string, error) {
 	strs = append(strs, s[point:])
 
 	return strs, nil
+}
+
+func turnToInt(v interface{}) int {
+	switch v.(type) {
+	case int: // push进去的计算结果为int
+		return v.(int)
+	case string: // exp中的数据为string
+		if i, err := strconv.Atoi(v.(string)); err != nil {
+			panic(err)
+		} else {
+			return i
+		}
+	}
+	panic(fmt.Sprintf("unknown value type: %T", v))
 }

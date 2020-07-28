@@ -25,7 +25,10 @@ func NewEngine(rule string) (*Engine, error) {
 	if err != nil {
 		return nil, err
 	}
+	engine.Tokens = tokens
 	log.Println(tokens)
+	engine.toReversePolish()
+
 	return engine, nil
 }
 
@@ -70,4 +73,14 @@ func (engine *Engine) sliceTokens() ([]string, error) {
 	}
 
 	return tokens, nil
+}
+
+func (engine *Engine) toReversePolish() {
+	tokens := engine.Tokens
+	postfixExp := toPostfix(tokens)
+	// printExp(postfixExp)
+	log.Println(postfixExp)
+	res := calValue(postfixExp)
+	log.Println(res)
+
 }
