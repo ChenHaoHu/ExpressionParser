@@ -1,4 +1,4 @@
-package internal
+package ep
 
 import (
 	"errors"
@@ -6,15 +6,16 @@ import (
 	"strings"
 )
 
+func main() {
+
+}
+
 type Engine struct {
 	Rule                string
 	Tokens              []string
 	ReversePolishTokens []string
 	Variables           []*Variable
 }
-
-var Delims = []rune{'+', '-', '*', '/', '(', ')', '&', '|', '!', '=', '>', '<', '?'}
-var CommonToken = []string{"&&", "||", "<=", ">=", "=="}
 
 func NewEngine(rule string) (*Engine, error) {
 	engine := &Engine{
@@ -26,13 +27,28 @@ func NewEngine(rule string) (*Engine, error) {
 		return nil, err
 	}
 	engine.Tokens = tokens
-	log.Println(tokens)
-	engine.toReversePolish()
+
+	reversePolishTokens := toReversePolish(tokens)
+
+	engine.ReversePolishTokens = reversePolishTokens
+
+	log.Println("原表达式：", tokens)
+	log.Println("逆波兰表达式：", reversePolishTokens)
 
 	return engine, nil
 }
 
-func (engine *Engine) AddVariable(variable *Variable) {
+func (engine *Engine) Calculate(context map[string]string) bool {
+
+	log.Println("上下文变量有:", context)
+
+	reversePolishTokens := engine.ReversePolishTokens
+	res := calValue(reversePolishTokens, context)
+	log.Println(res)
+	return res.(bool)
+}
+
+func (engine *Engine) addVariable(variable *Variable) {
 	engine.Variables = append(engine.Variables, variable)
 }
 
@@ -61,10 +77,10 @@ func (engine *Engine) sliceTokens() ([]string, error) {
 			previewToken = newToken
 		} else {
 
-			err, variable := isVariables(currToken)
-			if err == nil {
+			_, variable, flag := isVariables(currToken)
+			if flag == true {
 
-				engine.AddVariable(variable)
+				engine.addVariable(variable)
 			}
 
 			tokens = append(tokens, currToken)
@@ -73,15 +89,4 @@ func (engine *Engine) sliceTokens() ([]string, error) {
 	}
 
 	return tokens, nil
-}
-
-func (engine *Engine) toReversePolish() {
-	tokens := engine.Tokens
-	postfixExp := toPostfix(tokens)
-	// printExp(postfixExp)
-
-	log.Println(postfixExp, len(postfixExp))
-	res := calValue(postfixExp)
-	log.Println(res)
-
 }

@@ -1,49 +1,6 @@
-package internal
+package ep
 
-import (
-	"bytes"
-)
-
-func toExp(str string) []string {
-	s := make([]string, 0)
-	var t bytes.Buffer
-	n := 0 // 用于判断括号是否成对
-	for _, r := range str {
-		if r == ' ' {
-			// 去掉空格
-			continue
-		}
-		if isDigit(r) {
-			// 是数字 就写到缓存中
-			t.WriteRune(r)
-		} else {
-			rs := string(r)
-			if !isSign(rs) {
-				panic("unknown sign: " + rs)
-			}
-			if t.Len() > 0 {
-				// 遇到符号 把缓存中的数字 输出为数
-				// 例如 将缓存中的 ['1', '2', '3'] 输出为 "123"
-				s = append(s, t.String())
-				t.Reset()
-			}
-			s = append(s, rs)
-			if r == '(' {
-				n++
-			} else if r == ')' {
-				n--
-			}
-		}
-	}
-	if t.Len() > 0 {
-		// 最后一个操作符后面的数字 如果最后一个操作符是 ")" 那么 t.Len() 为0
-		s = append(s, t.String())
-	}
-	if n != 0 {
-		panic("the number of '(' is not equal to the number of ')' ")
-	}
-	return s
-}
+import "log"
 
 func isDigit(r rune) bool {
 	if r >= '0' && r <= '9' {
@@ -54,14 +11,14 @@ func isDigit(r rune) bool {
 
 func isSign(s string) bool {
 	switch s {
-	case "+", "-", "*", "/", "(", ")", "<=", ">=", "==", "&&", "||", "<", ">":
+	case "+", "-", "*", "/", "(", ")", "<=", ">=", "==", "&&", "||", "<", ">", "@":
 		return true
 	default:
 		return false
 	}
 }
 
-func toPostfix(exp []string) []string {
+func toReversePolish(exp []string) []string {
 	result := make([]string, 0)
 	s := NewStack()
 	for _, str := range exp {
@@ -117,6 +74,8 @@ func signCompare(a, b string) int {
 
 func getSignValue(a string) int {
 	switch a {
+	case "@":
+		return 5
 	case "(", ")":
 		return 4
 	case "*", "/":
@@ -135,7 +94,7 @@ func getTopV(s *Stack) interface{} {
 	return v
 }
 
-func calValue(exp []string) interface{} {
+func calValue(exp []string, context map[string]string) interface{} {
 	s := NewStack()
 	for _, str := range exp {
 		if isSign(str) {
@@ -144,30 +103,8 @@ func calValue(exp []string) interface{} {
 			b := getTopV(s)
 			a := getTopV(s)
 			var n interface{}
-			switch str {
-			case "+":
-				n = AddOperation(a, b)
-			case "-":
-				n = ReduceOperation(a, b)
-			case "*":
-				n = MultiplicationOperation(a, b)
-			case "/":
-				n = DivisionOperation(a, b)
-			case "==":
-				n = DoublequalOperation(a, b)
-			case ">=":
-				n = GreaterOrEqualOperation(a, b)
-			case "<=":
-				n = LesserOrEqualOperation(a, b)
-			case ">":
-				n = GreaterOperation(a, b)
-			case "<":
-				n = LesserOperation(a, b)
-			case "||":
-				n = OrOperation(a, b)
-			case "&&":
-				n = AndOperation(a, b)
-			}
+			n = OperationHandler(a, b, context, str)
+			log.Println(a, str, b, "=", n)
 			s.Push(n)
 		} else {
 			s.Push(str)

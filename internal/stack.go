@@ -1,4 +1,4 @@
-package internal
+package ep
 
 type Stack struct {
 	top    *node
