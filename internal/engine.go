@@ -6,10 +6,6 @@ import (
 	"strings"
 )
 
-func main() {
-
-}
-
 type Engine struct {
 	Rule                string
 	Tokens              []string
