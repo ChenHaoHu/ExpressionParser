@@ -79,7 +79,8 @@ func (engine *Engine) toReversePolish() {
 	tokens := engine.Tokens
 	postfixExp := toPostfix(tokens)
 	// printExp(postfixExp)
-	log.Println(postfixExp)
+
+	log.Println(postfixExp, len(postfixExp))
 	res := calValue(postfixExp)
 	log.Println(res)
 

@@ -71,7 +71,9 @@ func split(s string, sep []rune) ([]string, error) {
 		for i := 0; i < len(sep); i++ {
 			if runeValue == sep[i] {
 				if point < index {
+
 					strs = append(strs, s[point:index])
+
 				}
 				strs = append(strs, string(sep[i]))
 				point = index + 1
@@ -80,7 +82,10 @@ func split(s string, sep []rune) ([]string, error) {
 		}
 
 	}
-	strs = append(strs, s[point:])
+
+	if len(s) > point {
+		strs = append(strs, s[point:])
+	}
 
 	return strs, nil
 }

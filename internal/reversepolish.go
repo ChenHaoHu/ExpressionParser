@@ -67,9 +67,7 @@ func toPostfix(exp []string) []string {
 	for _, str := range exp {
 		if isSign(str) {
 			if str == "(" || s.Len() == 0 {
-				// "(" 或者 栈为空 直接进栈
-				// 括号中的计算 需要单独处理 相当于一个新的上下文
-				// 如果栈为空 需要先进栈 和后续操作符比较优先级之后 才能决定计算顺序
+
 				s.Push(str)
 			} else {
 				if str == ")" {
@@ -120,8 +118,10 @@ func signCompare(a, b string) int {
 func getSignValue(a string) int {
 	switch a {
 	case "(", ")":
-		return 3
+		return 4
 	case "*", "/":
+		return 3
+	case "+", "-":
 		return 2
 	case ">", "<", "<=", ">=", "==":
 		return 1

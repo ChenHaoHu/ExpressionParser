@@ -7,7 +7,11 @@ import (
 func main() {
 
 	// rule := "num{$age} >= 20 && num{$age} < 100"
-	rule := "100 >= 20 && 30 < 100 || 1200 == 300  || (50/10)==5"
+	rule := "100 >= 20 && 30 < 100 || 1200 == 300  &&(50/10)>5"
+
+	expression.NewEngine(rule)
+
+	rule = "100 >= 20 && 30 < 100 || 1200 == 300  &&((50/10)>5)"
 
 	expression.NewEngine(rule)
 

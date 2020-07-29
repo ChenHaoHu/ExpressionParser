@@ -5,8 +5,7 @@ import (
 )
 
 func OrOperation(a interface{}, b interface{}) bool {
-	// log.Println(a, reflect.TypeOf(a), "-----  || -------", b, reflect.TypeOf(b))
-	log.Println(a, "------ == ------", b)
+	log.Println(a, "------ || ------", b)
 
 	if a.(bool) || b.(bool) {
 		return true
