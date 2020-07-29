@@ -2,8 +2,9 @@ package ep
 
 import (
 	"errors"
-	"log"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type Engine struct {
@@ -28,19 +29,19 @@ func NewEngine(rule string) (*Engine, error) {
 
 	engine.ReversePolishTokens = reversePolishTokens
 
-	log.Println("原表达式：", tokens)
-	log.Println("逆波兰表达式：", reversePolishTokens)
+	log.Debug("原表达式：", tokens)
+	log.Debug("逆波兰表达式：", reversePolishTokens)
 
 	return engine, nil
 }
 
 func (engine *Engine) Calculate(context map[string]string) bool {
 
-	log.Println("上下文变量有:", context)
+	log.Debug("上下文变量有:", context)
 
 	reversePolishTokens := engine.ReversePolishTokens
 	res := calValue(reversePolishTokens, context)
-	log.Println(res)
+	log.Debug(res)
 	return res.(bool)
 }
 

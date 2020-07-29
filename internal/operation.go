@@ -1,8 +1,10 @@
 package ep
 
 import (
-	"log"
+	"regexp"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // operation.go 文件主要描述每一个运算符的具体操作
@@ -26,7 +28,7 @@ func checkV(v interface{}, context map[string]string) (interface{}, string) {
 			panic(err)
 		}
 
-		log.Println(variable.Name, "---->", v)
+		log.Debug(variable.Name, "---->", v)
 
 		return v, t
 
@@ -38,13 +40,13 @@ func checkV(v interface{}, context map[string]string) (interface{}, string) {
 
 func OperationHandler(v1 interface{}, v2 interface{}, context map[string]string, opt string) interface{} {
 
-	log.Println(v1, opt, v2)
+	log.Debug(v1, opt, v2)
 
 	//预处理两个变量
 	v1, _ = checkV(v1, context)
 	v2, _ = checkV(v2, context)
 
-	log.Println(v1, opt, v2)
+	log.Debug(v1, opt, v2)
 
 	switch opt {
 	case "+":
@@ -72,10 +74,28 @@ func OperationHandler(v1 interface{}, v2 interface{}, context map[string]string,
 		return OrOperation(v1.(bool), v2.(bool))
 	case "@":
 		return InOperation(v1.(string), v2.(string))
+	case "~":
+		return RegularOperation(v1.(string), v2.(string))
 	default:
 		panic("不支持的操作符号:" + opt)
 	}
 
+}
+
+func RegularOperation(a string, b string) bool {
+
+
+	b = b[1:len(b)-1]
+
+
+
+	matched, err := regexp.MatchString(b, a)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return matched
 }
 
 func InOperation(a string, b string) bool {
@@ -130,9 +150,6 @@ func DivisionOperation(a int, b int) int {
 }
 
 func DoublequalOperation(a interface{}, b interface{}) bool {
-
-	//因为相等判断 比较复杂 故写在这里
-	//判断a和b的类型 然后判断
 
 	if a == b {
 		return true

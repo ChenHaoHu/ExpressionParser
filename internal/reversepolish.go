@@ -1,17 +1,12 @@
 package ep
 
-import "log"
-
-func isDigit(r rune) bool {
-	if r >= '0' && r <= '9' {
-		return true
-	}
-	return false
-}
+import (
+	log "github.com/sirupsen/logrus"
+)
 
 func isSign(s string) bool {
 	switch s {
-	case "+", "-", "*", "/", "(", ")", "<=", ">=", "==", "&&", "||", "<", ">", "@":
+	case "+", "-", "*", "/", "(", ")", "<=", ">=", "==", "&&", "||", "<", ">", "@","~":
 		return true
 	default:
 		return false
@@ -74,7 +69,7 @@ func signCompare(a, b string) int {
 
 func getSignValue(a string) int {
 	switch a {
-	case "@":
+	case "@","~":
 		return 5
 	case "(", ")":
 		return 4
@@ -104,7 +99,7 @@ func calValue(exp []string, context map[string]string) interface{} {
 			a := getTopV(s)
 			var n interface{}
 			n = OperationHandler(a, b, context, str)
-			log.Println(a, str, b, "=", n)
+			log.Debug(a, str, b, "=", n)
 			s.Push(n)
 		} else {
 			s.Push(str)

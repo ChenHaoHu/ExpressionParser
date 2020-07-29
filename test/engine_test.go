@@ -13,18 +13,24 @@ func TestGetTokens(t *testing.T) {
 	}
 }
 
-func TestCalExpression(t *testing.T) {
-
+func TestCalExpression1(t *testing.T) {
 	rule := "$name == Mary && ( $age > 20 && $age < 100 ) ||$number == 1234567890 && $item @ [aa,bb,cc]"
-
+	ep.EnableDebugLogLevel()
 	engine, _ := ep.NewEpEngine(rule)
-
 	m := map[string]string{"age": "30", "name": "Mary", "number": "1234567890", "item": "dd"}
-
 	res := engine.Check(m)
-
 	if res == true {
 		t.Fatalf("Calculate error")
+	}
+}
 
+func TestCalExpression2(t *testing.T) {
+	rule := "$name == Mary && ( $age > 20 && $age < 100 ) ||$number == 1234567890 && $item @ [aa,bb,cc] || ( abcd ~ `ab.*`)"
+	ep.EnableDebugLogLevel()
+	engine, _ := ep.NewEpEngine(rule)
+	m := map[string]string{"age": "30", "name": "Mary", "number": "1234567890", "item": "dd"}
+	res := engine.Check(m)
+	if res == false {
+		t.Fatalf("Calculate error")
 	}
 }
