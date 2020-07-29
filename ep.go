@@ -1,7 +1,7 @@
 package ep
 
 import (
-	ep "ep/internal"
+	ep "github.com/ChenHaoHu/ExpressionParser/internal"
 )
 
 type EpEngine struct {

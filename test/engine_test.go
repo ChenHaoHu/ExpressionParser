@@ -1,7 +1,7 @@
 package ep
 
 import (
-	e "ep"
+	e "github.com/ChenHaoHu/ExpressionParser"
 	"testing"
 )
 
