@@ -3,4 +3,4 @@
 all: run
 
 run:
-	go run engine.go
+	cd test && go test

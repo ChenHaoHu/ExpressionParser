@@ -11,7 +11,7 @@ type EpEngine struct {
 
 func init() {
 	log.SetLevel(log.InfoLevel)
-	log.SetReportCaller(true)
+	//	log.SetReportCaller(true)
 }
 
 func NewEpEngine(rule string) (*EpEngine, error) {
