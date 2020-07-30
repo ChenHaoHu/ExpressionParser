@@ -1,6 +1,6 @@
 # ExpressionParser
 
-显示的标示变量类型 str($var1)  int($var2)
+~~显示的标示变量类型 str($var1)  int($var2)~~
 
 处理过程
 
@@ -23,9 +23,9 @@
 
 公式示例：
 
-* num{$age} > 20 && num{$age} < 100
+* $age> 20 && $age < 100
 
-* num{$var1} - num{$var2} == 30
+* $var1 - $var2 == 30
 
-* str{$name} == 'Mary' && ( num{$age} > 20 && num{$age} < 100 ) || num{$number} == 1234567890
+* $name == 'Mary' && ( $age > 20 && $age < 100 ) || $number == 1234567890
 
